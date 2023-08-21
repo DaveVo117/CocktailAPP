@@ -1,0 +1,269 @@
+﻿@{
+    ViewData ["Title"] = "Cocktelería";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+@section Estilos{
+    <link rel="stylesheet" href="/vendor/datatables/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/vendor/datatables/extensiones/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" href="/vendor/datatables/extensiones/css/buttons.dataTables.min.css">
+    <link href="/vendor/jquery-ui/jquery-ui.css" rel="stylesheet">
+
+        <style>
+
+        .modal-body {
+            display: flex;
+            justify-content: center !important;
+            align-items: center;
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .acordion {
+            max - width: 600px;
+            display: block;
+            margin: 100px auto;
+        }
+
+            .acordion.card {
+                box - shadow: 0px 0px 20px #d4d4d4;
+                margin - bottom: 10px;
+                float: left;
+                width: 100%;
+            }
+
+                .acordion.card.card-header-custom h3 {
+                    cursor: pointer;
+                    color: #ffffff;
+                    position: relative;
+                    background - color: #3343a2;
+                    margin: 0px;
+                    padding: 10px;
+                }
+
+                .acordion.card.card-header-custom {
+                    position: relative;
+                }
+
+                    .acordion.card.card-header-custom span {
+                        position: absolute;
+                        right: 20PX;
+                        top: 8px;
+                        height: 25px;
+                        width: 25px;
+                        color: #3343a2;
+                        background - color: #ffffff;
+                        border - radius: 50 %;
+                        text - align: center;
+                        line - height: 25px;
+                        font - size: 13px;
+                    }
+
+                .acordion.card.card-body-custom {
+                    padding: 20px;
+                }
+                /* abrir una tarjeta por defecto*/
+                .acordion .card:nth-child(1) .card-body-custom {
+                    display: none;
+                }
+
+                .acordion.card.card-body-custom {
+                    display: none;
+                }
+
+                    .acordion.card.card-body-custom p {
+                        font - size: 15px;
+                        line - height: 24px;
+                        color: #444444;
+                        margin: 0px;
+                    }
+    </style>
+
+}
+
+
+
+    <div class="row" id="formulario">
+     <div class="col-sm-4">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 bg-second-primary">
+                        <h6 class="m-0 font-weight-bold text-white"><i class="fas fa-search"></i>&ensp;Búsqueda </h6>
+                        </div>
+                        <div class="card-body">
+ 
+                            <div class="form-row">
+                                <div class="form-group col-sm-12">
+                                    <input type="text" class="form-control form-control-sm" id="txtNombre" style="text-align:center" placeholder="Nombre">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-12">
+                                    <input type="text" class="form-control form-control-sm" id="txtIngrediente" style="text-align:center" placeholder="Ingrediente">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-8">
+                                    <button type="button" class="btn btn-primary btn-block btn-sm" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <button type="button" class="btn btn-success btn-block btn-sm" id="btnLimpiar"><i class="fas fa-backspace"></i> Limpiar</button>
+                                </div>
+                            </div>
+                       
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" >
+            <div class="col-sm-12" id="divFavoritos">
+                    <div class="card shadow mb-4">
+                    <div class="card-header-custom py-3 bg-second-primary">
+                            <h6 class="m-0 font-weight-bold text-white"><i class="fas fa-star"></i>&ensp;Favoritos</h6>
+                        </div>
+                    <div class="card-body-custom">
+                        <div class="widget">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <ul id="ulFavoritos">
+
+                                    </ul>
+                                </div>
+                            </div>
+ 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+        </div>
+    <div class="col-sm-8" id="divResultados">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 bg-second-primary">
+                            <h6 class="m-0 font-weight-bold text-white"><i class="fas fa-list"></i>&ensp;Resultados</h6>
+                        </div>
+                        <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered" id="dtSearch" cellspacing="0" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Imágen</th>
+                                            <th>Nombre</th>
+                                            <th>Categoría</th>
+                                            <th>Ingrediente Principal</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <br />
+
+<!--  Modal-->
+<div class="modal fade" id="modalData" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="subtitulo" id="modalTttle"></h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" value="0" id="txtId">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-row">
+                                <div class="form-group col-sm-12">
+                                    <label for="txtTags">Categoría: </label>
+                                    <span id="txtTags" class="badge-secondary"></span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-12">
+                                    <label for="txtTags">Ingredientes: </label>
+                                    <span id="txtIngrediente1" class="badge-success"></span>
+                                    <span id="txtIngrediente2" class="badge-danger"></span>
+                                    <span id="txtIngrediente3" class="badge-primary"></span>
+                                    <span id="txtIngrediente4" class="badge-info"></span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-12">
+                                    <label>Instrucciónes: </label>
+                                    <p id="txtInstrucciones"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <img id="imgCocktail" style="max-width:200px;" src="" class="rounded mx-auto d-block" alt="Foto usuario">
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm" style="background-color:orange;" type="button" id="btnGuardar"><i class="fas fa-star" style="color:#ffff;"></i></button>
+                <button class="btn btn-danger btn-sm" id="btnOk" type="button" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    @section Scripts{
+
+    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/vendor/datatables/extensiones/js/dataTables.responsive.min.js"></script>
+
+    <script src="/vendor/datatables/extensiones/js/dataTables.buttons.min.js"></script>
+    <script src="/vendor/datatables/extensiones/js/jszip.min.js"></script>
+    <script src="/vendor/datatables/extensiones/js/buttons.html5.min.js"></script>
+    <script src="/vendor/datatables/extensiones/js/buttons.print.min.js"></script>
+
+    <script src="/vendor/jquery-ui/jquery-ui.js"></script>
+    <script src="/vendor/jquery-ui/idioma/datepicker-es.js"></script>
+    <script src="/js/vistas/Cocktail_Index.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".card-header-custom").click(function () {
+                // cerrar manualmente
+                if ($(this).next(".card-body-custom").hasClass("active")) {
+                    $(this).next(".card-body-custom").removeClass("active").slideUp()
+
+                }
+                else {
+                    $(".card .card-body-custom").removeClass("active").slideUp()
+                    $(this).next(".card-body-custom").addClass("active").slideDown()
+                }
+            })
+        })
+    </script>
+}
+
