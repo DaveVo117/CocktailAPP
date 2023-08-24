@@ -75,7 +75,7 @@ $("#dtSearch tbody").on("click", ".btn-primary", function () {
 
     const data = tableData.row(filaSeleccionada).data();
 
-    geByiId(data.idDrink,0);
+    geByiId(parseInt(data.idDrink),0);
 
 })
 
@@ -116,7 +116,7 @@ function limpiarIngrediente() {
 }
 function busquedaNombre(nombre) {
 
-    const url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${nombre}`;
+    const url = `/Drink/BusquedaNombre?nombre=${nombre}`;
 
     fetch(url)
         .then(response => {
@@ -127,7 +127,7 @@ function busquedaNombre(nombre) {
         })
         .then(data => {
  
-            const cocktails = data.drinks;
+            const cocktails = data.data;
 
             $('#dtSearch').DataTable({
                 data: cocktails,
@@ -173,7 +173,7 @@ function busquedaNombre(nombre) {
 }
 function busquedaIngrediente(ingrediente) {
 
-    const url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingrediente}`;
+    const url = `/Drink/BusquedaIngrediente?ingrediente=${ingrediente}`;
 
     fetch(url)
         .then(response => {
@@ -184,7 +184,7 @@ function busquedaIngrediente(ingrediente) {
         })
         .then(data => {
 
-            const cocktails = data.drinks;
+            const cocktails = data.data;
 
             $('#dtSearch').DataTable({
                 data: cocktails,
@@ -230,7 +230,7 @@ function busquedaIngrediente(ingrediente) {
 }
 function geByiId(id,type) {
 
-    const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
+    const url = `/Drink/ObtenerPorId?id=${id}`;
 
     fetch(url)
         .then(response => {
@@ -240,7 +240,7 @@ function geByiId(id,type) {
             return response.json();
         })
         .then(data => {
-            const cocktails = data.drinks[0];
+            const cocktails = data.data[0];
 
             mostrarModal(cocktails);
             if (type == 1) {
